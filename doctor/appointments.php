@@ -1,4 +1,4 @@
-
+<?php
 require_once '../database/database_connection.php';
 $doctor_id = $pdo->query("SELECT doctor_id FROM doctors WHERE user_id = " . $_SESSION['user_id'])->fetchColumn();
 ?>
