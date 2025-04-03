@@ -1,0 +1,16 @@
+
+# Ignore dependency folders
+vendor/
+
+# Ignore log files
+logs/
+*.log
+
+# Ignore sensitive files
+database/database_connection.php
+
+# Ignore backup folder
+backup/
+
+# Ignore XAMPP-specific files (if any)
+.htaccess

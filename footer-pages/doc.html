@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profiles with Appointment System</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: lightslategrey;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .container {
+            width: 320px;
+            background: linear-gradient(135deg, #ffffff, #dfe9f3);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            margin: 15px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.07);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .details, .appointment-form {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #34495e;
+        }
+        .details p {
+            margin: 6px 0;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .appointment-form input, .appointment-form button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+        .appointment-form button {
+            background-color: #2c3e50;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .appointment-form button:hover {
+            background-color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dr. Gurung</h1>
+        <div class="details">
+            <p><strong>Specialization:</strong> Cardiologist</p>
+            <p><strong>Experience:</strong> 8+ years</p>
+            <p><strong>Hospital:</strong> City Heart Care Hospital</p>
+            <p><strong>Contact:</strong> +977-9876543210</p>
+            <p><strong>Email:</strong> gurung11@gmail.com</p>
+            <p><strong>Location:</strong> Kathmandu, Nepal</p>
+        </div>
+        <div class="appointment-form">
+            <h3>Book an Appointment</h3>
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="phone number" placeholder="your phone number" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="date" id="date" required>
+            <button onclick="bookAppointment('Dr. Gurung')">Book Now</button>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Dr. Gurung</h1>
+        <div class="details">
+            <p><strong>Specialization:</strong> Cardiologist</p>
+            <p><strong>Experience:</strong> 8+ years</p>
+            <p><strong>Hospital:</strong> City Heart Care Hospital</p>
+            <p><strong>Contact:</strong> +977-9876543210</p>
+            <p><strong>Email:</strong> gurung11@gmail.com</p>
+            <p><strong>Location:</strong> Kathmandu, Nepal</p>
+        </div>
+        <div class="appointment-form">
+            <h3>Book an Appointment</h3>
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="phone number" placeholder="your phone number" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="date" id="date" required>
+            <button onclick="bookAppointment('Dr. Gurung')">Book Now</button>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Dr. Gurung</h1>
+        <div class="details">
+            <p><strong>Specialization:</strong> Cardiologist</p>
+            <p><strong>Experience:</strong> 8+ years</p>
+            <p><strong>Hospital:</strong> City Heart Care Hospital</p>
+            <p><strong>Contact:</strong> +977-9876543210</p>
+            <p><strong>Email:</strong> gurung11@gmail.com</p>
+            <p><strong>Location:</strong> Kathmandu, Nepal</p>
+        </div>
+        <div class="appointment-form">
+            <h3>Book an Appointment</h3>
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="phone number" placeholder="your phone number" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="date" id="date" required>
+            <button onclick="bookAppointment('Dr. Gurung')">Book Now</button>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Dr. Gurung</h1>
+        <div class="details">
+            <p><strong>Specialization:</strong> Cardiologist</p>
+            <p><strong>Experience:</strong> 8+ years</p>
+            <p><strong>Hospital:</strong> City Heart Care Hospital</p>
+            <p><strong>Contact:</strong> +977-9876543210</p>
+            <p><strong>Email:</strong> gurung11@gmail.com</p>
+            <p><strong>Location:</strong> Kathmandu, Nepal</p>
+        </div>
+        <div class="appointment-form">
+            <h3>Book an Appointment</h3>
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="phone number" placeholder="your phone number" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="date" id="date" required>
+            <button onclick="bookAppointment('Dr. Gurung')">Book Now</button>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Dr. Gurung</h1>
+        <div class="details">
+            <p><strong>Specialization:</strong> Cardiologist</p>
+            <p><strong>Experience:</strong> 8+ years</p>
+            <p><strong>Hospital:</strong> City Heart Care Hospital</p>
+            <p><strong>Contact:</strong> +977-9876543210</p>
+            <p><strong>Email:</strong> gurung11@gmail.com</p>
+            <p><strong>Location:</strong> Kathmandu, Nepal</p>
+        </div>
+        <div class="appointment-form">
+            <h3>Book an Appointment</h3>
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="phone number" placeholder="your phone number" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="date" id="date" required>
+            <button onclick="bookAppointment('Dr. Gurung')">Book Now</button>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Dr. Gurung</h1>
+        <div class="details">
+            <p><strong>Specialization:</strong> Cardiologist</p>
+            <p><strong>Experience:</strong> 8+ years</p>
+            <p><strong>Hospital:</strong> City Heart Care Hospital</p>
+            <p><strong>Contact:</strong> +977-9876543210</p>
+            <p><strong>Email:</strong> gurung11@gmail.com</p>
+            <p><strong>Location:</strong> Kathmandu, Nepal</p>
+        </div>
+        <div class="appointment-form">
+            <h3>Book an Appointment</h3>
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="phone number" placeholder="your phone number" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="date" id="date" required>
+            <button onclick="bookAppointment('Dr. Gurung')">Book Now</button>
+        </div>
+    </div>
+
+
+    <script>
+        function bookAppointment(doctorName) {
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            let date = document.getElementById('date').value;
+            
+            if (name === '' || email === '' || date === '') {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            alert(`Appointment booked with ${doctorName} on ${date} for ${name}`);
+        }
+    </script>
+</body>
+</html>

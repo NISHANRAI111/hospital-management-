@@ -1,0 +1,69 @@
+
+Setting environment for using XAMPP for Windows.
+ACER@NISHAN-DESKTOP c:\xampp
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 38
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> use mnmn_db
+Database changed
+MariaDB [mnmn_db]> CREATE TABLE users (
+    ->     user_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     username VARCHAR(50) UNIQUE NOT NULL,
+    ->     password_hash VARCHAR(255) NOT NULL,
+    ->     role ENUM('Patient', 'Doctor', 'Receptionist', 'Admin') NOT NULL,
+    ->     is_admin BOOLEAN DEFAULT FALSE
+    -> );
+Query OK, 0 rows affected (0.009 sec)
+
+MariaDB [mnmn_db]> CREATE TABLE patients (
+    ->     patient_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     user_id INT UNIQUE,
+    ->     full_name VARCHAR(100) NOT NULL,
+    ->     age INT,
+    ->     email VARCHAR(100),
+    ->     medical_history TEXT,
+    ->     blood_group ENUM('A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'),
+    ->     emergency_contact VARCHAR(15),
+    ->     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.009 sec)
+
+MariaDB [mnmn_db]> CREATE TABLE doctors (
+    ->     doctor_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     user_id INT UNIQUE,
+    ->     full_name VARCHAR(100) NOT NULL,
+    ->     age INT,
+    ->     email VARCHAR(100),
+    ->     specialization VARCHAR(100),
+    ->     years_of_experience INT,
+    ->     medical_license_number VARCHAR(50) UNIQUE,
+    ->     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.007 sec)
+
+MariaDB [mnmn_db]> CREATE TABLE receptionists (
+    ->     receptionist_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     user_id INT UNIQUE,
+    ->     full_name VARCHAR(100) NOT NULL,
+    ->     age INT,
+    ->     email VARCHAR(100),
+    ->     work_shift ENUM('Morning', 'Evening', 'Night'),
+    ->     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [mnmn_db]> CREATE TABLE admins (
+    ->     admin_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     user_id INT UNIQUE,
+    ->     full_name VARCHAR(100) NOT NULL,
+    ->     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [mnmn_db]>
