@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Patient') {
     header("Location: /authorization/login.php");
     exit;
 }
-require_once '../Action/db_connect.php';
+require_once '../database/database_connection.php';
 $stmt = $pdo->prepare("SELECT full_name, age, email, medical_history, blood_group, emergency_contact FROM patients WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $profile = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -4,8 +4,20 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Patient') {
     header("Location: /authorization/login.php");
     exit;
 }
-require_once '../Action/db_connect.php';
-$patient_id = $pdo->query("SELECT patient_id FROM patients WHERE user_id = " . $_SESSION['user_id'])->fetchColumn();
+
+// Debug file path
+if (!file_exists('../database/database_connection.php')) {
+    die("Error: database_connection.php not found at " . realpath('../database/database_connection.php'));
+}
+require_once '../database/database_connection.php';
+
+// Use prepared statement to prevent SQL injection
+$stmt = $pdo->prepare("SELECT patient_id FROM patients WHERE user_id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$patient_id = $stmt->fetchColumn();
+if ($patient_id === false) {
+    die("Error: No patient ID found for this user.");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,12 +58,14 @@ $patient_id = $pdo->query("SELECT patient_id FROM patients WHERE user_id = " . $
     </footer>
     <script>
     $(document).ready(function() {
+        // Fetch existing appointments
         $.ajax({
             url: '../Action/get_appointments.php',
             type: 'POST',
-            data: { patient_id: <?php echo $patient_id; ?> },
+            data: { patient_id: <?php echo json_encode($patient_id); ?> },
             dataType: 'json',
             success: function(response) {
+                console.log(response);
                 if (response.status === 'success') {
                     let html = '<table><tr><th>Date</th><th>Doctor</th><th>Status</th><th>Action</th></tr>';
                     response.appointments.forEach(function(apt) {
@@ -62,14 +76,67 @@ $patient_id = $pdo->query("SELECT patient_id FROM patients WHERE user_id = " . $
                 } else {
                     $('#appointments-list').html('<p>No appointments.</p>');
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
             }
         });
 
+        // Handle "Request New Appointment" button click
         $('#new-appointment').click(function() {
-            // Placeholder for new appointment form (could be a modal)
-            alert('New appointment form would go here.');
+            // Show a simple form (you can style this with CSS or use a modal)
+            let formHtml = `
+                <div id="appointment-form">
+                    <h3>Request New Appointment</h3>
+                    <label>Doctor ID: <input type="number" id="doctor_id" required></label><br>
+                    <label>Date and Time: <input type="datetime-local" id="appointment_date" required></label><br>
+                    <button id="submit-appointment">Submit</button>
+                    <button id="cancel-form">Cancel</button>
+                </div>`;
+            $('#appointments-list').append(formHtml);
+            $(this).hide(); // Hide the "Request New Appointment" button while form is visible
         });
 
+        // Handle form submission
+        $(document).on('click', '#submit-appointment', function() {
+            let doctorId = $('#doctor_id').val();
+            let appointmentDate = $('#appointment_date').val();
+
+            if (doctorId && appointmentDate) {
+                $.ajax({
+                    url: '../Action/manage_appointment.php',
+                    type: 'POST',
+                    data: {
+                        action: 'create',
+                        patient_id: <?php echo json_encode($patient_id); ?>,
+                        doctor_id: doctorId,
+                        appointment_date: appointmentDate
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            alert('Appointment requested successfully!');
+                            location.reload(); // Refresh to show the new appointment
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error: ", status, error);
+                    }
+                });
+            } else {
+                alert('Please fill in all fields.');
+            }
+        });
+
+        // Cancel form
+        $(document).on('click', '#cancel-form', function() {
+            $('#appointment-form').remove();
+            $('#new-appointment').show();
+        });
+
+        // Handle appointment cancellation
         $(document).on('click', '.cancel-apt', function() {
             let aptId = $(this).data('id');
             if (confirm('Cancel this appointment?')) {

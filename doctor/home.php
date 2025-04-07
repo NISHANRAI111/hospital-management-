@@ -50,9 +50,8 @@ $doctor_id = $pdo->query("SELECT doctor_id FROM doctors WHERE user_id = " . $_SE
     </section>
     <footer>
         <p>© 2025 MNMN | All Rights Reserved</p>
-        <p>Healthroid does not offer medical advice, diagnosis or treatment.</p>
+        <p>MNMN does not offer medical advice, diagnosis or treatment.</p>
         <p>The materials provided on our website, including services, content and products, are solely intended to provide informational purposes.</p>
-        <p>Created and Designed by Manoj KC and Nishan Rai</p>
     </footer>
 
     <script>

@@ -323,7 +323,7 @@
           <h4>Term and Condition</h4>
         </a>
         <a href="footer-pages/adversite.html">
-          <h4>Adverstisement</h4>
+          <h4>Adverstisement Policy</h4>
         </a>
         <a href="footer-pages/doc.html">
           <h4>Doctor details</h4>
@@ -333,9 +333,8 @@
     <hr>
     <div class="footer-last">
       <p>© 2025 MNMN | All Rights Reserved</p>
-      <p>Healthroid does not offer medical advice, diagnosis or treatment.</p>
+      <p>MNMN does not offer medical advice, diagnosis or treatment.</p>
       <p>The materials provided on our website, including services, content and products, are solely intended to provide informational purposes.</p>
-      <p>Created and Design by Manoj KC and Nishan Rai</p>
     </div>
 
   </footer>

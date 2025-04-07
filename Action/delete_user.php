@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once '../database/database_connection.php';
+require_once '/database/database_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id']) && isset($_POST['role'])) {
     $user_id = $_POST['user_id'];

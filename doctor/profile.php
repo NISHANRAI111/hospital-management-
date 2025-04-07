@@ -1,5 +1,9 @@
 <?php
-
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Doctor') {
+    header("Location: /authorization/login.php");
+    exit;
+}
 require_once '../database/database_connection.php';
 $stmt = $pdo->prepare("SELECT full_name, age, email, specialization, years_of_experience, medical_license_number FROM doctors WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
@@ -45,9 +49,8 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
     </section>
     <footer>
         <p>© 2025 MNMN | All Rights Reserved</p>
-        <p>Healthroid does not offer medical advice, diagnosis or treatment.</p>
+        <p>MNMN does not offer medical advice, diagnosis or treatment.</p>
         <p>The materials provided on our website are for informational purposes only.</p>
-        <p>Created and Designed by Manoj KC and Nishan Rai</p>
     </footer>
     <script>
     $(document).ready(function() {

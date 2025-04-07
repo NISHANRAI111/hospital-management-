@@ -8,11 +8,11 @@ require '../database/database_connection.php'; // Database connection
 header('Content-Type: application/json');
 
 try {
-    // Ensure $conn is available and configured
-    if (!isset($conn)) {
+    // Ensure $pdo is available and configured
+    if (!isset($pdo)) {
         throw new PDOException("Database connection not established");
     }
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Retrieve and sanitize form data
     $fullname = trim($_POST['fullname'] ?? '');
@@ -49,7 +49,7 @@ try {
 
     // Check if username already exists
     if (empty($errors['username'])) {
-        $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
         $stmt->execute([$username]);
         if ($stmt->fetchColumn() > 0) {
             $errors['username'] = "Username is already taken";
@@ -66,24 +66,24 @@ try {
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
     // Begin transaction
-    $conn->beginTransaction();
+    $pdo->beginTransaction();
 
     // Insert into users table
-    $stmt = $conn->prepare("INSERT INTO users (username, password_hash, role) VALUES (:username, :password, :role)");
+    $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, role) VALUES (:username, :password, :role)");
     $stmt->execute([
         'username' => $username,
         'password' => $password_hash,
         'role' => $role
     ]);
 
-    $user_id = $conn->lastInsertId();
+    $user_id = $pdo->lastInsertId();
 
     // Insert into specific role table
     if ($role === 'Patient') {
         $medical_history = trim($_POST['medical-history'] ?? '');
         $blood_group = trim($_POST['blood-group'] ?? '');
         $contact = trim($_POST['contact'] ?? '');
-        $stmt = $conn->prepare("INSERT INTO patients (user_id, full_name, age, email, medical_history, blood_group, emergency_contact) 
+        $stmt = $pdo->prepare("INSERT INTO patients (user_id, full_name, age, email, medical_history, blood_group, emergency_contact) 
                                 VALUES (:user_id, :full_name, :age, :email, :medical_history, :blood_group, :contact)");
         $stmt->execute([
             'user_id' => $user_id,
@@ -98,7 +98,7 @@ try {
         $specialization = trim($_POST['specialization'] ?? '');
         $experience = intval($_POST['experience'] ?? 0);
         $license = trim($_POST['license'] ?? '');
-        $stmt = $conn->prepare("INSERT INTO doctors (user_id, full_name, age, email, specialization, years_of_experience, medical_license_number) 
+        $stmt = $pdo->prepare("INSERT INTO doctors (user_id, full_name, age, email, specialization, years_of_experience, medical_license_number) 
                                 VALUES (:user_id, :full_name, :age, :email, :specialization, :experience, :license)");
         $stmt->execute([
             'user_id' => $user_id,
@@ -111,7 +111,7 @@ try {
         ]);
     } elseif ($role === 'Receptionist') {
         $shift = trim($_POST['shift'] ?? '');
-        $stmt = $conn->prepare("INSERT INTO receptionists (user_id, full_name, age, email, work_shift) 
+        $stmt = $pdo->prepare("INSERT INTO receptionists (user_id, full_name, age, email, work_shift) 
                                 VALUES (:user_id, :full_name, :age, :email, :shift)");
         $stmt->execute([
             'user_id' => $user_id,
@@ -122,7 +122,7 @@ try {
         ]);
     }
 
-    $conn->commit();
+    $pdo->commit();
     // Return success with a redirect instruction
     echo json_encode([
         "status" => "success",
@@ -130,8 +130,8 @@ try {
         "redirect" => "login.php"
     ]);
 } catch (PDOException $e) {
-    if (isset($conn) && $conn->inTransaction()) {
-        $conn->rollBack();
+    if (isset($pdo) && $pdo->inTransaction()) {
+        $pdo->rollBack();
     }
     echo json_encode(["status" => "error", "message" => "Database error: " . $e->getMessage()]);
 } catch (Exception $e) {

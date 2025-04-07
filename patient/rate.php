@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Patient') {
     header("Location: /authorization/login.php");
     exit;
 }
-require_once '../Action/db_connect.php';
+require_once '../database/database_connection.php';
 $patient_id = $pdo->query("SELECT patient_id FROM patients WHERE user_id = " . $_SESSION['user_id'])->fetchColumn();
 ?>
 <!DOCTYPE html>

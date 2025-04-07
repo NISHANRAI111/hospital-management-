@@ -15,10 +15,10 @@ session_start();
 session_regenerate_id(true);
 
 try {
-    if (!isset($conn)) {
+    if (!isset($pdo)) {
         throw new PDOException("Database connection not established");
     }
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -40,7 +40,7 @@ try {
         exit;
     }
 
-    $stmt = $conn->prepare("SELECT user_id, username, password_hash, role FROM users WHERE username = :username AND role = :role");
+    $stmt = $pdo->prepare("SELECT user_id, username, password_hash, role FROM users WHERE username = :username AND role = :role");
     $stmt->execute([
         'username' => $username,
         'role' => $role
@@ -71,7 +71,7 @@ try {
             $redirect = '../admin/home.php';
             break;
         default:
-            $redirect = '/authorization/login.php';
+            $redirect = '../authorization/login.php';
     }
 
     echo json_encode([

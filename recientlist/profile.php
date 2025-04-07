@@ -1,10 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Receptionist') {
-    header("Location: ../authorization/login.php");
+    header("Location: /authorization/login.php");
     exit;
 }
-require_once '../Action/db_connect.php';
+require_once '../database/database_connection.php';
 $stmt = $pdo->prepare("SELECT full_name, age, email, work_shift FROM receptionists WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $profile = $stmt->fetch(PDO::FETCH_ASSOC);

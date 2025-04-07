@@ -1,6 +1,19 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Doctor') {
+    header("Location: /authorization/login.php");
+    exit;
+}
 
 require_once '../database/database_connection.php';
-$doctor_id = $pdo->query("SELECT doctor_id FROM doctors WHERE user_id = " . $_SESSION['user_id'])->fetchColumn();
+
+// Get doctor_id securely
+$stmt = $pdo->prepare("SELECT doctor_id FROM doctors WHERE user_id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$doctor_id = $stmt->fetchColumn();
+if ($doctor_id === false) {
+    die("Error: No doctor ID found for this user.");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,48 +47,60 @@ $doctor_id = $pdo->query("SELECT doctor_id FROM doctors WHERE user_id = " . $_SE
     </section>
     <footer>
         <p>© 2025 MNMN | All Rights Reserved</p>
-        <p>Healthroid does not offer medical advice, diagnosis or treatment.</p>
+        <p>MNMN does not offer medical advice, diagnosis or treatment.</p>
         <p>The materials provided on our website are for informational purposes only.</p>
-        <p>Created and Designed by Manoj KC and Nishan Rai</p>
     </footer>
     <script>
     $(document).ready(function() {
         $.ajax({
             url: '../Action/get_appointments.php',
             type: 'POST',
-            data: { doctor_id: <?php echo $doctor_id; ?> },
+            data: { doctor_id: <?php echo json_encode($doctor_id); ?> },
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
-                    let html = '<table><tr><th>Date</th><th>Patient</th><th>Status</th><th>Action</th></tr>';
+                    let html = '<table><tr><th>Date</th><th>Patient</th><th>Status</th><th>Action</th><th>Reason</th></tr>';
                     response.appointments.forEach(function(apt) {
-                        html += `<tr><td>${apt.appointment_date}</td><td>${apt.patient_name}</td><td>${apt.status}</td><td>${apt.status === 'Pending' ? '<button class="approve-apt" data-id="' + apt.appointment_id + '">Approve</button><button class="reject-apt" data-id="' + apt.appointment_id + '">Reject</button>' : ''}</td></tr>`;
+                        html += `<tr>
+                            <td>${apt.appointment_date}</td>
+                            <td>${apt.patient_name}</td>
+                            <td>${apt.status}</td>
+                            <td>${apt.status === 'Pending' ? 
+                                '<button class="approve-apt" data-id="' + apt.appointment_id + '">Approve</button><button class="reject-apt" data-id="' + apt.appointment_id + '">Reject</button>' : 
+                                ''}</td>
+                            <td>${apt.rejection_reason || 'N/A'}</td>
+                        </tr>`;
                     });
                     html += '</table>';
                     $('#appointments-list').html(html);
                 } else {
                     $('#appointments-list').html('<p>No appointments.</p>');
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
             }
         });
 
         $(document).on('click', '.approve-apt', function() {
             let aptId = $(this).data('id');
-            $.ajax({
-                url: '../Action/manage_appointment.php',
-                type: 'POST',
-                data: { action: 'approve', appointment_id: aptId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') location.reload();
-                    else alert('Error: ' + response.message);
-                }
-            });
+            if (confirm('Approve this appointment?')) {
+                $.ajax({
+                    url: '../Action/manage_appointment.php',
+                    type: 'POST',
+                    data: { action: 'approve', appointment_id: aptId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') location.reload();
+                        else alert('Error: ' + response.message);
+                    }
+                });
+            }
         });
 
         $(document).on('click', '.reject-apt', function() {
             let aptId = $(this).data('id');
-            let reason = prompt('Reason for rejection:');
+            let reason = prompt('Please provide a reason for rejection:');
             if (reason) {
                 $.ajax({
                     url: '../Action/manage_appointment.php',
@@ -87,6 +112,8 @@ $doctor_id = $pdo->query("SELECT doctor_id FROM doctors WHERE user_id = " . $_SE
                         else alert('Error: ' + response.message);
                     }
                 });
+            } else if (reason === '') {
+                alert('A reason is required for rejection.');
             }
         });
     });
